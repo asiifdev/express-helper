@@ -1,0 +1,28 @@
+{
+  "name": "@asiifdev/express-helper",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "CLI to make a templating file for expressJS",
+  "main": "app.js",
+  "author": "asiifdev",
+  "license": "ISC",
+  "private": false,
+  "scripts": {
+    "express-helper": "node app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asiifdev/express-helper.git"
+  },
+  "keywords": [
+    "express"
+  ],
+  "bugs": {
+    "url": "https://github.com/asiifdev/express-helper/issues"
+  },
+  "homepage": "https://github.com/asiifdev/express-helper#readme",
+  "dependencies": {
+    "commander": "^11.0.0"
+  },
+  "devDependencies": {}
+}
