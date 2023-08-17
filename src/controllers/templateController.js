@@ -9,7 +9,7 @@ const createTemplates = async (req, res) => {
     try {
         let tableName = TemplatesTable.name
         let checkIdType = await prisma.$queryRawUnsafe(`SHOW COLUMNS FROM ${tableName} WHERE Field = 'id'`)
-        if (checkIdType.Type == 'int') uuid = false
+        if (checkIdType[0].Type == 'int') uuid = false
         let response = await createHelper(body, TemplatesTable, false, uuid)
         return res.status(response.code).json(response)
     } catch (error) {
@@ -27,7 +27,7 @@ const showTemplates = async (req, res) => {
     let uuid = true
     let tableName = TemplatesTable.name
     let checkIdType = await prisma.$queryRawUnsafe(`SHOW COLUMNS FROM ${tableName} WHERE Field = 'id'`)
-    if (checkIdType.Type == 'int') uuid = false
+    if (checkIdType[0].Type == 'int') uuid = false
 
     let id = req.params.id
     let payload = {
@@ -45,7 +45,7 @@ const updateTemplates = async (req, res) => {
     let tableName = TemplatesTable.name
     let columns = await prisma.$queryRawUnsafe(`SHOW COLUMNS FROM ${tableName}`);
     let checkIdType = await prisma.$queryRawUnsafe(`SHOW COLUMNS FROM ${tableName} WHERE Field = 'id'`)
-    if (checkIdType.Type == 'int') uuid = false
+    if (checkIdType[0].Type == 'int') uuid = false
     let updateData = {}
 
     for (let key in columns) {

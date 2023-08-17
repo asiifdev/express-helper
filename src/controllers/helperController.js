@@ -162,7 +162,7 @@ const deleteHelper = async (id, table) => {
     let uuid = true
     let tableName = table.name
     let checkIdType = await prisma.$queryRawUnsafe(`SHOW COLUMNS FROM ${tableName} WHERE Field = 'id'`)
-    if (checkIdType.Type == 'int') uuid = false
+    if (checkIdType[0].Type == 'int') uuid = false
 
     try {
         let params = {

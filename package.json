@@ -1,7 +1,7 @@
 {
   "name": "@asiifdev/express-helper",
   "type": "module",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "CLI to make a templating file for expressJS",
   "main": "app.js",
   "author": "asiifdev",
