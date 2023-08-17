@@ -14,7 +14,7 @@ const greenConsole = (msg1, msg2, msg3, msg4) => {
     return console.log(chalk.green(msg1, msg2, msg3, msg4))
 }
 
-const copyFiles = async (from, to) => {
+const copyFiles = async (from, to, nameFile) => {
     try {
         if (from.includes('Controller')) {
             from = './node_modules/@asiifdev/express-helper/src/controllers/' + from
@@ -23,8 +23,30 @@ const copyFiles = async (from, to) => {
             await fs.copy('./node_modules/@asiifdev/express-helper/src/controllers/helperController.js', './src/controllers/helperController.js')
             fs.copy(from, to, async (err) => {
                 if (err) return spinners.danger(err)
-                else spinners.success("Proses pembuatan controller ", `Templating File from ${from} to ${to} Created`)
-                // greenConsole(`\nTemplating File from ${from} to ${to} Created`)
+                else {
+                    // spinners.success("Proses pembuatan controller ", `Templating File from ${from} to ${to} Created`)
+                    fs.readFile(to, 'utf8', (err, data) => {
+                        if (err) {
+                            spinners.danger(err);
+                            return;
+                        }
+                        else {
+                            spinners.warning("Proses membaca controller ", "Membaca Controller")
+                            data = data.replace(/Template/g, firstUpper(nameFile))
+                            spinners.success("Proses membaca controller ", `Reading File to ${to} Finish`)
+                            fs.writeFile(to, data, (err) => {
+                                spinners.warning("Proses menulis controller ", "Menulis Controller")
+                                if (err) {
+                                    spinners.danger(err);
+                                    return;
+                                }
+                                else {
+                                    spinners.success("Proses menulis controller ", `Write to ${to} Finish`)
+                                }
+                            })
+                        }
+                    });
+                }
             })
         }
         if (from.includes('Route')) {
@@ -33,7 +55,30 @@ const copyFiles = async (from, to) => {
             spinners.warning("Proses pembuatan routing ", "Membuat Routing")
             fs.copy(from, to, (err) => {
                 if (err) return spinners.danger(err)
-                else spinners.success("Proses pembuatan router ", `Templating File from ${from} to ${to} Created`)
+                else {
+                    // spinners.success("Proses pembuatan controller ", `Templating File from ${from} to ${to} Created`)
+                    fs.readFile(to, 'utf8', (err, data) => {
+                        if (err) {
+                            spinners.danger(err);
+                            return;
+                        }
+                        else {
+                            spinners.warning("Proses membaca routing ", "Membaca routing")
+                            data = data.replace(/Template/g, firstUpper(nameFile))
+                            spinners.success("Proses membaca routing ", `Reading File to ${to} Finish`)
+                            fs.writeFile(to, data, (err) => {
+                                spinners.warning("Proses menulis routing ", "Menulis routing")
+                                if (err) {
+                                    spinners.danger(err);
+                                    return;
+                                }
+                                else {
+                                    spinners.success("Proses menulis routing ", `Write to ${to} Finish`)
+                                }
+                            })
+                        }
+                    });
+                }
             })
         }
     } catch (err) {
@@ -91,12 +136,17 @@ const firstLower = (lower) => {
     return lower && lower[0].toLowerCase() + lower.slice(1) || lower;
 }
 
+const firstUpper = (upper) => {
+    return upper && upper[0].toUpperCase() + upper.slice(1) || upper;
+}
+
 export {
     redConsole,
     blueConsole,
     greenConsole,
     copyFiles,
     spinners,
-    firstLower
+    firstLower,
+    firstUpper
 }
 

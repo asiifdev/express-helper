@@ -21,9 +21,9 @@ program.command('make:controller')
       str = firstLower(str.replace('controller', 'Controller'))
     }
     const nameFile = str.replace('Controller', '');
-    copyFiles('templateController.js', `${str}.js`)
+    copyFiles('templateController.js', `${str}.js`, nameFile)
     if (options.r) {
-      copyFiles('templateRoute.js', `${nameFile}Route.js`)
+      copyFiles('templateRoute.js', `${nameFile}Route.js`, nameFile)
     }
     console.log(str)
   })
@@ -31,8 +31,6 @@ program.command('make:controller')
 program.command('make:template')
   .description('Command to make a SRC Dir templating Express JS')
   .argument('location', 'location of Template')
-  .option('-r', 'Buat router nya sekalian')
-  .option('-d', 'Buat dokumentasi nya sekalian')
   .action((str, options) => {
     console.log(str, options)
   })
