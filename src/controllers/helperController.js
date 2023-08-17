@@ -21,11 +21,11 @@ const createHelper = async (payload, table, randomNumberId = false, useUuid = fa
 
         payload.created_at = await dateNow()
         payload.updated_at = await dateNow()
-        if (randomNumberId) {
-            payload.id = await randomNumber()
-        }
         if (useUuid) {
             payload.id = uuidv4()
+        }
+        if (randomNumberId) {
+            payload.id = await randomNumber()
         }
         if (payload.password) {
             let newPass = await bcrtpt.hash(payload.password, 10).then(hash => {
@@ -47,7 +47,7 @@ const createHelper = async (payload, table, randomNumberId = false, useUuid = fa
             let columName = columns[key].Field
             insertData[columName] = payload[columName]
         }
-        
+
         let data = await insertOne(table, insertData)
         return response(Ok, "success", "created Successfully", data)
     } catch (error) {
@@ -159,9 +159,14 @@ const updateHelper = async (payload, table) => {
 }
 
 const deleteHelper = async (id, table) => {
+    let uuid = true
+    let tableName = table.name
+    let checkIdType = await prisma.$queryRawUnsafe(`SHOW COLUMNS FROM ${tableName} WHERE Field = 'id'`)
+    if (checkIdType.Type == 'int') uuid = false
+
     try {
         let params = {
-            id: parseInt(id),
+            id: uuid ? id : parseInt(id),
             updateData: {
                 is_deleted: true
             }
