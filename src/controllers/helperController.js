@@ -15,6 +15,10 @@ const prisma = new PrismaClient({
 
 const createHelper = async (payload, table, randomNumberId = false, useUuid = false) => {
     try {
+        let tableName = table.name
+        let columns = await prisma.$queryRawUnsafe(`SHOW COLUMNS FROM ${tableName}`);
+        let insertData = {}
+
         payload.created_at = await dateNow()
         payload.updated_at = await dateNow()
         if (randomNumberId) {
@@ -38,7 +42,13 @@ const createHelper = async (payload, table, randomNumberId = false, useUuid = fa
             })
             if (checkEmail) return response(badRequest, "failed", "email already exist");
         }
-        let data = await insertOne(table, payload)
+
+        for (let key in columns) {
+            let columName = columns[key].Field
+            insertData[columName] = payload[columName]
+        }
+        
+        let data = await insertOne(table, insertData)
         return response(Ok, "success", "created Successfully", data)
     } catch (error) {
         console.log(error)

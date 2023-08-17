@@ -5,20 +5,8 @@ import { createHelper, deleteHelper, getHelper, showHelper, updateHelper } from 
 
 const createTemplates = async (req, res) => {
     let body = req.body
-    let name = body.name
-    let price = body.price
-    let duration = body.duration
-    let is_addon = body.is_addon
-    let is_package = body.is_package
     try {
-        let payload = {
-            name,
-            price,
-            duration,
-            is_addon,
-            is_package
-        }
-        let response = await createHelper(payload, TemplatesTable)
+        let response = await createHelper(body, TemplatesTable)
         return res.status(response.code).json(response)
     } catch (error) {
         console.log(error)
@@ -43,23 +31,21 @@ const showTemplates = async (req, res) => {
 const updateTemplates = async (req, res) => {
     let id = req.params.id
     let body = req.body
-    let name = body.name
-    let price = body.price
-    let duration = body.duration
-    let is_addon = body.is_addon
-    let is_package = body.is_package
+
+    let tableName = TemplatesTable.name
+    let columns = await prisma.$queryRawUnsafe(`SHOW COLUMNS FROM ${tableName}`);
+    let updateData = {}
+
+    for (let key in columns) {
+        let columName = columns[key].Field
+        updateData[columName] = body[columName]
+    }
 
     let payload = {
         id: parseInt(id),
-        updateData: {
-            name,
-            price,
-            duration,
-            is_addon,
-            is_package
-        }
+        updateData: updateData
     }
-    console.log(payload)
+
     let response = await updateHelper(payload, TemplatesTable)
     return res.status(response.code).json(response)
 }
