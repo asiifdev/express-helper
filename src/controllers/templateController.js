@@ -2,10 +2,6 @@ import { findMany } from "../repository/baseRepository.js"
 import { InternalServerError } from "../utils/httpStatus.js"
 import { TemplatesTable, prisma } from "../utils/prismaSchema.js"
 import { createHelper, deleteHelper, getHelper, showHelper, updateHelper } from "./helperController.js"
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient({
-    log: ['query'],
-});
 
 const createTemplates = async (req, res) => {
     let body = req.body
