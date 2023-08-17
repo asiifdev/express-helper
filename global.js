@@ -17,22 +17,23 @@ const greenConsole = (msg1, msg2, msg3, msg4) => {
 const copyFiles = async (from, to) => {
     try {
         if (from.includes('Controller')) {
-            from = './src/controllers/' + from
+            from = './node_modules/@asiifdev/express-helper/src/controllers/' + from
             to = './src/controllers/' + to
             spinners.warning("Proses pembuatan controller ", "Membuat Controller")
+            await fs.copy('./node_modules/@asiifdev/express-helper/src/controllers/helperController.js', './src/controllers/helperController.js')
             fs.copy(from, to, async (err) => {
-                if (err) return redConsole(err)
-                spinners.success("Proses pembuatan controller ", `Templating File from ${from} to ${to} Created`)
+                if (err) return spinners.danger(err)
+                else spinners.success("Proses pembuatan controller ", `Templating File from ${from} to ${to} Created`)
                 // greenConsole(`\nTemplating File from ${from} to ${to} Created`)
             })
         }
         if (from.includes('Route')) {
-            from = './src/routes/' + from
+            from = './node_modules/@asiifdev/express-helper/src/routes/' + from
             to = './src/routes/' + to
             spinners.warning("Proses pembuatan routing ", "Membuat Routing")
             fs.copy(from, to, (err) => {
-                if (err) return redConsole(err)
-                greenConsole(`\nTemplating File from ${from} to ${to} Created`)
+                if (err) return spinners.danger(err)
+                else spinners.success("Proses pembuatan router ", `Templating File from ${from} to ${to} Created`)
             })
         }
     } catch (err) {
@@ -58,12 +59,12 @@ const spinners = {
         const spinner = ora(msg).start();
         setTimeout(() => {
             spinner.color = 'red';
-            spinner.text = process;
+            spinner.text = msg;
         }, 2000);
         if (stop) {
             setTimeout(() => {
                 spinner.stop()
-                console.log(chalk.red('╪ ', process))
+                console.log(chalk.red('╪ ', msg))
             }, 5000)
         }
     },

@@ -16,12 +16,16 @@ program.command('make:controller')
   .action((str, options) => {
     if (str.includes('Controller')) {
       str = firstLower(str)
-      copyFiles('templateController.js', `${str}.js`)
-      console.log(str)
     }
     if (str.includes('controller')) {
       str = firstLower(str.replace('controller', 'Controller'))
     }
+    const nameFile = str.replace('Controller', '');
+    copyFiles('templateController.js', `${str}.js`)
+    if (options.r) {
+      copyFiles('templateRoute.js', `${nameFile}Route.js`)
+    }
+    console.log(str)
   })
 
 program.command('make:template')
