@@ -15,6 +15,7 @@ const prisma = new PrismaClient({
 
 const createHelper = async (payload, table, randomNumberId = false, useUuid = false) => {
     try {
+        let relations = {};
         let tableName = table.name
         let columns = await prisma.$queryRawUnsafe(`SHOW COLUMNS FROM ${tableName}`);
         let insertData = {}
@@ -45,10 +46,24 @@ const createHelper = async (payload, table, randomNumberId = false, useUuid = fa
 
         for (let key in columns) {
             let columName = columns[key].Field
-            insertData[columName] = payload[columName]
+            let changeName = false;
+            if (columName.includes('_id')) {
+                changeName = columName.replace('_id', 's')
+                relations[changeName] = true
+            }
+            if (changeName) {
+                insertData[changeName] = {
+                    connect: {
+                        id: payload[columName]
+                    }
+                }
+            }
+            else {
+                insertData[columName] = payload[columName]
+            }
         }
 
-        let data = await insertOne(table, insertData)
+        let data = await insertOne(table, insertData, relations)
         return response(Ok, "success", "created Successfully", data)
     } catch (error) {
         console.log(error)
@@ -60,34 +75,56 @@ const getHelper = async (payload, table, req) => {
     let params = [];
     let where = {}
     let select = {}
+    let tableName = table.name
+    let columns = await prisma.$queryRawUnsafe(`SHOW COLUMNS FROM ${tableName}`);
     payload.page = payload.page && payload.page !== '' ? parseInt(payload.page) : 1;
     payload.per_page = payload.per_page && payload.per_page !== '' ? parseInt(payload.per_page) : 10;
     const { take, skip } = parsePaginationToQueryParams(payload)
 
     try {
+        for (let key in columns) {
+            let columName = columns[key].Field
+            let changeName = false;
+            if(columName == 'password') select[columName] = false
+            if (payload[columName]) {
+                where[columName] = {
+                    contains: payload[columName]
+                }
+            }
+            if (columName.includes('_id')) {
+                changeName = columName.replace('_id', 's')
+                if (payload[columName] && payload[columName] != "") {
+                    where[columName] = payload[columName]
+                }
+                select[changeName] = true
+            }
+            else {
+                select[columName] = true
+            }
+        }
         if (payload.email) {
             where.email = {
                 contains: payload.email
             }
-            select.email = true
         }
         if (payload.name) {
             where.name = {
                 contains: payload.name
             }
-            select.name = true
+        }
+        if (payload.holder) {
+            where.holder = {
+                contains: payload.holder
+            }
         }
         if (payload.is_addon) {
             where.is_addon = payload.is_addon || payload.is_addon == "true" ? true : false
-            select.is_addon = true
         }
         if (payload.is_package) {
             where.is_package = payload.is_package || payload.is_package == "true" ? true : false
-            select.is_package = true
         }
         if (payload.status) {
             where.status = payload.status
-            select.status = true
         }
         if (payload.date) {
             where.created_at = {
@@ -101,8 +138,6 @@ const getHelper = async (payload, table, req) => {
             }]
         }
         where.is_deleted = false
-        select.created_at = true
-        select.updated_at = true
 
         params = {
             where,
@@ -111,12 +146,11 @@ const getHelper = async (payload, table, req) => {
             skip
         }
 
-        console.log(select)
         const data = await table.findMany(params);
         const total = await table.count({ where: where });
 
         const link = getLink(req);
-        const queryParams = getSomeProperties(payload, ["page", "per_page", "role", "search", "sort"]);
+        const queryParams = getSomeProperties(payload, Object.keys(payload));
 
         const resultData = paginateData(queryParams, data, payload.page, total, payload.per_page, link, skip);
         return response(Ok, "success", "success", resultData)

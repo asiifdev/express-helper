@@ -1,6 +1,7 @@
-const insertOne = (table, params) => {
+const insertOne = (table, params, relations) => {
     const data = table.create({
-        data: params
+        data: params,
+        include: relations
     });
     return data;
 }

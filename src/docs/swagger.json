@@ -1,0 +1,2422 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "webuild API Documentations",
+    "version": "3.0.0",
+    "description": "All APIs Documentations for webuild Backend."
+  },
+  "externalDocs": {
+    "description": "swagger.json",
+    "url": "/api/v1/webuild/api-docs/swagger.json"
+  },
+  "paths": {
+    "/api/v1/webuild/users": {
+      "get": {
+        "summary": "List users",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "string",
+              "example": 1
+            }
+          },
+          {
+            "in": "query",
+            "name": "per_page",
+            "schema": {
+              "type": "string",
+              "example": 10
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "type": "string",
+              "example": "active"
+            }
+          },
+          {
+            "in": "query",
+            "name": "email",
+            "schema": {
+              "type": "string",
+              "example": "email@mail.com"
+            }
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "schema": {
+              "type": "string",
+              "example": "2023-03-01"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "schema": {
+              "type": "string",
+              "example": "asc"
+            }
+          }
+        ],
+        "tags": [
+          "Users"
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetListUsers"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webuild/user/create": {
+      "post": {
+        "summary": "Create user",
+        "tags": [
+          "Users"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseAddUser"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webuild/user": {
+      "get": {
+        "summary": "Find user",
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "private_key",
+            "in": "header",
+            "description": "private key in service end user",
+            "required": true,
+            "example": "h38d69403a3169f5d745gs52888019",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindUserSchemas"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webuild/user/update/{id}": {
+      "patch": {
+        "summary": "Update user",
+        "tags": [
+          "Users"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUser"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "private_key",
+            "in": "header",
+            "description": "private key in service end user",
+            "required": true,
+            "example": "h38d69403a3169f5d745gs52888019",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindUserSchemas"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webuild/user/delete/{id}": {
+      "delete": {
+        "summary": "Delete user",
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "private_key",
+            "in": "header",
+            "description": "private key in service end user",
+            "required": true,
+            "example": "h38d69403a3169f5d745gs52888019",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListUsers"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webuild/auth/login": {
+      "post": {
+        "summary": "Login User",
+        "tags": [
+          "Auth login/register user"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/loginUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/loginResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webuild/auth/client/login": {
+      "post": {
+        "summary": "Login Client",
+        "tags": [
+          "Auth login/register client"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/loginUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/loginResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webuild/auth/register": {
+      "post": {
+        "summary": "Register User",
+        "tags": [
+          "Auth login/register user"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/loginResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webuild/auth/client/register": {
+      "post": {
+        "summary": "Register Client",
+        "tags": [
+          "Auth login/register client"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/addClient"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/loginResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webuild/items": {
+      "post": {
+        "summary": "Create items",
+        "tags": [
+          "All about Items"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/addItems"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/loginResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get items",
+        "tags": [
+          "All about Items"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "name",
+            "schema": {
+              "type": "string",
+              "example": ""
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "string",
+              "example": 1
+            }
+          },
+          {
+            "in": "query",
+            "name": "per_page",
+            "schema": {
+              "type": "string",
+              "example": 10
+            }
+          },
+          {
+            "in": "query",
+            "name": "is_addon",
+            "schema": {
+              "type": "string",
+              "example": "true"
+            }
+          },
+          {
+            "in": "query",
+            "name": "is_package",
+            "schema": {
+              "type": "string",
+              "example": "true"
+            }
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "schema": {
+              "type": "string",
+              "example": "2023-03-01"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "schema": {
+              "type": "string",
+              "example": "asc"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindUserSchemas"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webuild/items/{id}": {
+      "get": {
+        "summary": "Get items by id",
+        "tags": [
+          "All about Items"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindUserSchemas"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update items",
+        "tags": [
+          "All about Items"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/addItems"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindUserSchemas"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete items by id",
+        "tags": [
+          "All about Items"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindUserSchemas"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webuild/roles": {
+      "post": {
+        "summary": "Create roles",
+        "tags": [
+          "All about Roles"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/addRoles"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/loginResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get roles",
+        "tags": [
+          "All about Roles"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "name",
+            "schema": {
+              "type": "string",
+              "example": ""
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "string",
+              "example": 1
+            }
+          },
+          {
+            "in": "query",
+            "name": "per_page",
+            "schema": {
+              "type": "string",
+              "example": 10
+            }
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "schema": {
+              "type": "string",
+              "example": "2023-03-01"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "schema": {
+              "type": "string",
+              "example": "asc"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindUserSchemas"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webuild/roles/{id}": {
+      "get": {
+        "summary": "Get roles by id",
+        "tags": [
+          "All about Roles"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindUserSchemas"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update roles",
+        "tags": [
+          "All about Roles"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/addRoles"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindUserSchemas"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete roles by id",
+        "tags": [
+          "All about Roles"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindUserSchemas"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webuild/subscriptions": {
+      "post": {
+        "summary": "Create subscriptions",
+        "tags": [
+          "All about Subscription"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/addSubscription"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/loginResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get subscriptions",
+        "tags": [
+          "All about Subscription"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "client_id",
+            "schema": {
+              "type": "string",
+              "example": ""
+            }
+          },
+          {
+            "in": "query",
+            "name": "invoice",
+            "schema": {
+              "type": "string",
+              "example": "INV/113483646058927"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "string",
+              "example": 1
+            }
+          },
+          {
+            "in": "query",
+            "name": "per_page",
+            "schema": {
+              "type": "string",
+              "example": 10
+            }
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "schema": {
+              "type": "string",
+              "example": "2023-03-01"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "schema": {
+              "type": "string",
+              "example": "asc"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindUserSchemas"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webuild/subscriptions/{id}": {
+      "get": {
+        "summary": "Get subscriptions by id",
+        "tags": [
+          "All about Subscription"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindUserSchemas"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update subscriptions",
+        "tags": [
+          "All about Subscription"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/addSubscription"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindUserSchemas"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete subscriptions by id",
+        "tags": [
+          "All about Subscription"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindUserSchemas"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webuild/client-cards": {
+      "post": {
+        "summary": "Create client Cards",
+        "tags": [
+          "All about clientCards"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/addclientCards"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/loginResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get client Cards",
+        "tags": [
+          "All about clientCards"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "holder",
+            "schema": {
+              "type": "string",
+              "example": ""
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "string",
+              "example": 1
+            }
+          },
+          {
+            "in": "query",
+            "name": "per_page",
+            "schema": {
+              "type": "string",
+              "example": 10
+            }
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "schema": {
+              "type": "string",
+              "example": "2023-03-01"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "schema": {
+              "type": "string",
+              "example": "asc"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindUserSchemas"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webuild/client-cards/{id}": {
+      "get": {
+        "summary": "Get client Cards by id",
+        "tags": [
+          "All about clientCards"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindUserSchemas"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update client Cards",
+        "tags": [
+          "All about clientCards"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/addclientCards"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindUserSchemas"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete client Cards by id",
+        "tags": [
+          "All about clientCards"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindUserSchemas"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webuild/packages": {
+      "post": {
+        "summary": "Create Packages",
+        "tags": [
+          "All about Packages"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/addPackages"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/listPackages"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get Packages",
+        "tags": [
+          "All about Packages"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "search",
+            "schema": {
+              "type": "string",
+              "example": ""
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "string",
+              "example": 1
+            }
+          },
+          {
+            "in": "query",
+            "name": "per_page",
+            "schema": {
+              "type": "string",
+              "example": 10
+            }
+          },
+          {
+            "in": "query",
+            "name": "price",
+            "schema": {
+              "type": "string",
+              "example": ""
+            }
+          },
+          {
+            "in": "query",
+            "name": "duration",
+            "schema": {
+              "type": "string",
+              "example": ""
+            }
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "schema": {
+              "type": "string",
+              "example": ""
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "schema": {
+              "type": "string",
+              "example": "asc"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/listPackages"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webuild/packages/{id}": {
+      "get": {
+        "summary": "Get Packages by id",
+        "tags": [
+          "All about Packages"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindPackagesSchemas"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update Packages",
+        "tags": [
+          "All about Packages"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/updatePackages"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindPackagesSchemas"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Packages by id",
+        "tags": [
+          "All about Packages"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindPackagesSchemas"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webuild/packages/item/{id}": {
+      "delete": {
+        "summary": "Delete Item Packages by id",
+        "tags": [
+          "All about Packages"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindPackagesItemSchemas"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error / could be server or backend error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AddUser": {
+        "type": "object",
+        "required": [
+          "email",
+          "role",
+          "password",
+          "password_confirmation"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User email"
+          },
+          "role": {
+            "type": "string",
+            "description": "User role"
+          }
+        },
+        "example": {
+          "email": "azriel.wetalk@gmail.com",
+          "role": "admin",
+          "password": "akuemas22",
+          "password_confirmation": "akuemas22"
+        }
+      },
+      "addClient": {
+        "type": "object",
+        "required": [
+          "email",
+          "password",
+          "password_confirmation"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User email"
+          }
+        },
+        "example": {
+          "email": "client.wetalk@gmail.com",
+          "password": "akuemas22",
+          "password_confirmation": "akuemas22"
+        }
+      },
+      "addSubscription": {
+        "type": "object",
+        "required": [
+          "client_id",
+          "package_id"
+        ],
+        "example": {
+          "client_id": "WTK316364",
+          "package_id": "1"
+        }
+      },
+      "addclientCards": {
+        "type": "object",
+        "required": [
+          "client_id",
+          "holder",
+          "address",
+          "postal_code",
+          "country",
+          "number",
+          "exp_month",
+          "exp_year",
+          "cvv_cvc",
+          "is_primary",
+          "is_success"
+        ],
+        "example": {
+          "client_id": "WTK316364",
+          "holder": "Muhammad Syaiful Anwar",
+          "address": "Jawa tengah",
+          "postal_code": "57372",
+          "country": "indonesia",
+          "number": "12345678",
+          "exp_month": "08",
+          "exp_year": "23",
+          "cvv_cvc": "342",
+          "is_primary": true,
+          "is_success": false
+        }
+      },
+      "addItems": {
+        "type": "object",
+        "required": [
+          "name",
+          "price",
+          "duration",
+          "is_addon",
+          "is_package"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Item name"
+          },
+          "price": {
+            "type": "string",
+            "description": "Item price"
+          },
+          "duration": {
+            "type": "string",
+            "description": "Item duration"
+          }
+        },
+        "example": {
+          "name": "Coba Items",
+          "price": 23000,
+          "duration": 10,
+          "is_addon": true,
+          "is_package": true
+        }
+      },
+      "addPackages": {
+        "type": "object",
+        "required": ["name", "description", "price", "duration"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Package name"
+          },
+          "description": {
+            "type": "string",
+            "description": "Package description"
+          },
+          "price": {
+            "type": "string",
+            "description": "Package price"
+          },
+          "duration": {
+            "type": "string",
+            "description": "Package duration"
+          },
+          "detail": {
+            "type": "array",
+            "description": "Package detail"
+          }
+        },
+        "example": {
+          "name": "pro",
+          "description": "blavasdasdsa1",
+          "price": 3000000,
+          "duration": 30,
+          "detail": [
+            { "item_id": 1, "qty": 2 },
+            { "item_id": 3, "qty": 1 }
+          ]
+        }
+      },
+      "addRoles": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Item name"
+          }
+        },
+        "example": {
+          "name": "Super Admin"
+        }
+      },
+      "UpdateUser": {
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User email"
+          },
+          "status": {
+            "type": "string",
+            "description": "User Status"
+          }
+        },
+        "example": {
+          "email": "azriel.wetalk@gmail.com",
+          "status": "active",
+          "password": "akuemas22"
+        }
+      },
+      "updatePackages": {
+        "type": "object",
+        "required": ["name", "description", "price", "duration"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Package name"
+          },
+          "description": {
+            "type": "string",
+            "description": "Package description"
+          },
+          "price": {
+            "type": "string",
+            "description": "Package price"
+          },
+          "duration": {
+            "type": "string",
+            "description": "Package duration"
+          },
+          "detail": {
+            "type": "array",
+            "description": "Package detail"
+          }
+        },
+        "example": {
+          "name": "pro",
+          "description": "blavasdasdsa1",
+          "price": 3000000,
+          "duration": 30,
+          "detail": [
+            {"id": 1,"item_id": 1, "qty": 2},
+            {"id": 2,"item_id": 3, "qty": 1}
+          ]
+        }
+      },
+      "SuccessResponseAddUser": {
+        "type": "object",
+        "example": {
+          "status": 200,
+          "message": "Success create data",
+          "response": {
+            "id": "e87caed7-f748-4bd1-a3b4-1b1af84d375b",
+            "email": "fikih.wetalk@gmail.com",
+            "role_id": "e87caed7-f748-4bd1-a3b4-1b1af84d375b",
+            "created_at": "2023-02-03 03:14:07",
+            "updated_at": "2023-02-03 03:14:07"
+          }
+        }
+      },
+      "FindUserSchemas": {
+        "type": "object",
+        "example": {
+          "code": 200,
+          "status": "success",
+          "message": "success",
+          "response": {
+            "id": "e87caed7-f748-4bd1-a3b4-1b1af84d375b",
+            "email": "fikih.wetalk@gmail.com",
+            "password": "$2a$10$mY9n69OcsoBi7w8id/JfoePSxXjpgLf65nwZO6/HC2oYUZtInh5vy",
+            "role_id": "e87caed7-f748-4bd1-a3b4-1b1af84d375b",
+            "created_at": "2023-02-03 03:14:07",
+            "updated_at": "2023-02-03 03:14:07",
+            "status": "active"
+          }
+        }
+      },
+      "ListUsers": {
+        "type": "object",
+        "example": {
+          "status": 200,
+          "message": "success"
+        }
+      },
+      "loginResponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "1"
+            },
+            "email": {
+              "type": "string",
+              "example": "azriel.wetalk@gmail.com"
+            },
+            "token": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IkF6cmllbCBGYXV6aSIsImVtYWlsIjoiYXpyaWVsLndldGFsa0BnbWFpbC5jb20iLCJpYXQiOjE2OTE1NzM3OTIsImV4cCI6MTY5NDE2NTc5Mn0.C6nR-HQOCRVIkYCNbJhrdyq7FogHOuC0hXcoT9aBarU"
+            }
+          }
+        }
+      },
+      "GetListUsers": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 200
+          },
+          "status": {
+            "type": "string",
+            "example": "success"
+          },
+          "message": {
+            "type": "string",
+            "example": "success"
+          },
+          "response": {
+            "type": "object",
+            "properties": {
+              "query": {
+                "type": "object",
+                "properties": {
+                  "role": {
+                    "type": "string",
+                    "example": "admin"
+                  },
+                  "sort": {
+                    "type": "string",
+                    "example": "asc"
+                  }
+                }
+              },
+              "data": {
+                "$ref": "#/components/schemas/GetListUsersResponse"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "page": {
+                    "type": "object",
+                    "properties": {
+                      "page": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "per_page": {
+                        "type": "integer",
+                        "example": 10
+                      },
+                      "from": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "to": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "total": {
+                        "type": "integer",
+                        "example": 10
+                      },
+                      "last_page": {
+                        "type": "integer",
+                        "example": 5
+                      }
+                    }
+                  }
+                }
+              },
+              "links": {
+                "type": "object",
+                "properties": {
+                  "1": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "2": {
+                    "type": "string",
+                    "example": "http://localhost:3017/api/v1/service-user/users?page=2&per_page=2&role=admin"
+                  },
+                  "3": {
+                    "type": "string",
+                    "example": "http://localhost:3017/api/v1/service-user/users?page=3&per_page=2&role=admin"
+                  },
+                  "prev": {
+                    "type": "string",
+                    "example": null
+                  },
+                  "next": {
+                    "type": "string",
+                    "example": "http://localhost:3017/api/v1/service-user/users?page=2&per_page=2&role=admin"
+                  },
+                  "last": {
+                    "type": "string",
+                    "example": "http://localhost:3017/api/v1/service-user/users?page=5&per_page=2&role=admin"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "GetListUsersResponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "1"
+            },
+            "email": {
+              "type": "string",
+              "example": "azriel.wetalk@gmail.com"
+            },
+            "created_at": {
+              "type": "string",
+              "example": "2023-05-11T09:22:06.000Z"
+            }
+          }
+        }
+      },
+      "loginUser": {
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User email"
+          }
+        },
+        "example": {
+          "email": "azriel.wetalk@gmail.com",
+          "password": "akuemas22"
+        }
+      },
+      "listPackages": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 200
+          },
+          "status": {
+            "type": "string",
+            "example": "success"
+          },
+          "message": {
+            "type": "string",
+            "example": "success"
+          },
+          "response": {
+            "type": "object",
+            "properties": {
+              "query": {
+                "type": "object",
+                "properties": {
+                  "per_page": {
+                    "type": "integer",
+                    "example": "10"
+                  },
+                  "sort": {
+                    "type": "string",
+                    "example": "asc"
+                  }
+                }
+              },
+              "data": {
+                "$ref": "#/components/schemas/ListPackagesResponse"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "page": {
+                    "type": "object",
+                    "properties": {
+                      "page": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "per_page": {
+                        "type": "integer",
+                        "example": 10
+                      },
+                      "from": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "to": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "total": {
+                        "type": "integer",
+                        "example": 10
+                      },
+                      "last_page": {
+                        "type": "integer",
+                        "example": 5
+                      }
+                    }
+                  }
+                }
+              },
+              "links": {
+                "type": "object",
+                "properties": {
+                  "1": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "2": {
+                    "type": "string",
+                    "example": "http://localhost:3000/api/v1/webuild/packages?page=2&per_page=2"
+                  },
+                  "3": {
+                    "type": "string",
+                    "example": "http://localhost:3000/api/v1/webuild/packages?page=3&per_page=2"
+                  },
+                  "prev": {
+                    "type": "string",
+                    "example": null
+                  },
+                  "next": {
+                    "type": "string",
+                    "example": "http://localhost:3000/api/v1/webuild/packages?page=2&per_page=2"
+                  },
+                  "last": {
+                    "type": "string",
+                    "example": "http://localhost:3000/api/v1/webuild/packages?page=5&per_page=2"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ListPackagesResponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": "1"
+            },
+            "name": {
+              "type": "string",
+              "example": "Basic"
+            },
+            "description": {
+              "type": "string",
+              "example": "blablba"
+            },
+            "price": {
+              "type": "integer",
+              "example": 3000000
+            },
+            "duration": {
+              "type": "integer",
+              "example": 30
+            },
+            "is_deleted": {
+              "type": "integer",
+              "example": 0
+            },
+            "created_at": {
+              "type": "string",
+              "example": "2023-08-16 15:17:12"
+            },
+            "detail": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "example": "1"
+                  },
+                  "package_id": {
+                    "type": "integer",
+                    "example": "1"
+                  },
+                  "item_id": {
+                    "type": "integer",
+                    "example": "1"
+                  },
+                  "qty": {
+                    "type": "integer",
+                    "example": "1"
+                  },
+                  "is_deleted": {
+                    "type": "integer",
+                    "example": "0"
+                  },
+                  "item_name": {
+                    "type": "string",
+                    "example": "Channel"
+                  },
+                  "item_price": {
+                    "type": "integer",
+                    "example": "500000"
+                  },
+                  "item_duration": {
+                    "type": "integer",
+                    "example": "1"
+                  },
+                  "item_is_addon": {
+                    "type": "integer",
+                    "example": "1"
+                  },
+                  "item_id_package": {
+                    "type": "integer",
+                    "example": "1"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "FindPackagesSchemas": {
+        "type": "object",
+        "example": {
+          "status": true,
+          "code": 200,
+          "message": "Successful operation",
+          "response": {
+            "id": 1,
+            "name": "Basic",
+            "description": "blablba",
+            "is_deleted": false,
+            "price": 3000000,
+            "duration": 30,
+            "created_at": "2023-08-16T15:17:12.000Z",
+            "updated_at": "2023-08-16T15:17:12.000Z",
+            "detail": [
+              {
+                "id": 1,
+                "package_id": 1,
+                "item_id": 3,
+                "qty": 1,
+                "is_deleted": 0,
+                "created_at": "2023-08-16T15:18:13.000Z",
+                "updated_at": "2023-08-16T15:18:13.000Z",
+                "item_name": "Channel",
+                "item_price": 500000,
+                "item_duration": 1,
+                "item_is_addon": 1,
+                "item_id_package": 1
+              },
+              {
+                "id": 2,
+                "package_id": 1,
+                "item_id": 2,
+                "qty": 500,
+                "is_deleted": 0,
+                "created_at": "2023-08-16T15:18:27.000Z",
+                "updated_at": "2023-08-16T15:18:27.000Z",
+                "item_name": "Monthly Active User",
+                "item_price": 800000,
+                "item_duration": 1000,
+                "item_is_addon": 1,
+                "item_id_package": 1
+              },
+              {
+                "id": 3,
+                "package_id": 1,
+                "item_id": 3,
+                "qty": 2,
+                "is_deleted": 0,
+                "created_at": "2023-08-16T15:19:15.000Z",
+                "updated_at": "2023-08-16T15:19:15.000Z",
+                "item_name": "Channel",
+                "item_price": 500000,
+                "item_duration": 1,
+                "item_is_addon": 1,
+                "item_id_package": 1
+              }
+            ]
+          }
+        }
+      },
+      "FindPackagesItemSchemas": {
+        "type": "object",
+        "example": {
+          "status": true,
+          "code": 200,
+          "message": "Successful operation",
+          "response": {
+            "id": 3,
+            "package_id": 1,
+            "item_id": 3,
+            "qty": 2,
+            "is_deleted": true,
+            "created_at": "2023-08-16T15:19:15.000Z",
+            "updated_at": "2023-08-16T15:19:15.000Z"
+          }
+        }
+      },
+      "InternalServerErrorResponse": {
+        "type": "object",
+        "example": {
+          "status": 500,
+          "message": "Internal server error"
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "tags": []
+}

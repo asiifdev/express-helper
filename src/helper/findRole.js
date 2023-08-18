@@ -1,9 +1,9 @@
 import { findFirst } from "../repository/baseRepository.js"
-import { rolesTable } from "../utils/prismaSchema.js"
+import { RolesTable } from "../utils/prismaSchema.js"
 
 const findRoleByName = async (name) => {
     // Find Role
-    return await findFirst(rolesTable, {
+    return await findFirst(RolesTable, {
        where: {
            name
        }
@@ -12,7 +12,7 @@ const findRoleByName = async (name) => {
 
 const findRoleById = async (id) => {
     // Find Role
-    return await findFirst(rolesTable, {
+    return await findFirst(RolesTable, {
        where: {
            id
        }
