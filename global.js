@@ -65,6 +65,7 @@ const copyFiles = async (from, to, nameFile) => {
                         else {
                             spinners.warning("Proses membaca routing ", "Membaca routing")
                             data = data.replace(/Template/g, firstUpper(nameFile))
+                            data = data.replace(firstUpper(nameFile) + 'Controller', firstLower(nameFile) + 'Controller')
                             spinners.success("Proses membaca routing ", `Reading File to ${to} Finish`)
                             fs.writeFile(to, data, (err) => {
                                 spinners.warning("Proses menulis routing ", "Menulis routing")
