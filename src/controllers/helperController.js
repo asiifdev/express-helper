@@ -196,6 +196,14 @@ const updateHelper = async (payload, table) => {
                 is_deleted: false
             }
         })
+        if (payload.updateData.password) {
+            let newPass = await bcrtpt.hash(payload.updateData.password, 10).then(hash => {
+                return hash
+            })
+            payload.updateData.password = newPass
+        }
+        payload.updateData.updated_at = await dateNow()
+        
         if (!cek) return response(badRequest, "failed", "data tidak ditemukan");
         let data = await updateOne(table, payload)
         return response(Ok, "success", "Update berhasil", data)
