@@ -15,10 +15,11 @@ const prisma = new PrismaClient({
 
 const createHelper = async (payload, table, randomNumberId = false, useUuid = false) => {
     try {
-        let relations = {};
+        let relations;
         let tableName = table.name
         let columns = await prisma.$queryRawUnsafe(`SHOW COLUMNS FROM ${tableName}`);
         let insertData = {}
+        let data = {}
 
         payload.created_at = await dateNow()
         payload.updated_at = await dateNow()
@@ -48,6 +49,7 @@ const createHelper = async (payload, table, randomNumberId = false, useUuid = fa
             let columName = columns[key].Field
             let changeName = false;
             if (columName.includes('_id')) {
+                relations = {...relations}
                 changeName = columName.replace('_id', 's')
                 relations[changeName] = true
             }
@@ -62,8 +64,14 @@ const createHelper = async (payload, table, randomNumberId = false, useUuid = fa
                 insertData[columName] = payload[columName]
             }
         }
+        
+        if(!relations || relations == undefined){
+            data = await insertOne(table, insertData)
+        }
+        else {
+            data = await insertOne(table, insertData, relations)
+        }
 
-        let data = await insertOne(table, insertData, relations)
         return response(Ok, "success", "created Successfully", data)
     } catch (error) {
         console.log(error)
@@ -115,6 +123,11 @@ const getHelper = async (payload, table, req) => {
         if (payload.holder) {
             where.holder = {
                 contains: payload.holder
+            }
+        }
+        if (payload.client_id) {
+            where.client_id = {
+                contains: payload.client_id
             }
         }
         if (payload.is_addon) {
