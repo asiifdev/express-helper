@@ -102,7 +102,15 @@ const getHelper = async (payload, table, req) => {
             if (columName.includes('_id')) {
                 changeName = columName.replace('_id', 's')
                 if (payload[columName] && payload[columName] != "") {
-                    where[columName] = payload[columName]
+                    let checkIdType = await prisma.$queryRawUnsafe(`SHOW COLUMNS FROM ${changeName} WHERE Field = 'id'`)
+                    checkIdType = checkIdType[0].Type
+                    console.log(checkIdType)
+                    if(checkIdType == 'int'){
+                        where[columName] = parseInt(payload[columName])
+                    }
+                    else {
+                        where[columName] = payload[columName]
+                    }
                 }
                 select[changeName] = true
             }
