@@ -49,7 +49,7 @@ const createHelper = async (payload, table, randomNumberId = false, useUuid = fa
             let columName = columns[key].Field
             let changeName = false;
             if (columName.includes('_id')) {
-                relations = {...relations}
+                relations = { ...relations }
                 changeName = columName.replace('_id', 's')
                 relations[changeName] = true
             }
@@ -64,8 +64,8 @@ const createHelper = async (payload, table, randomNumberId = false, useUuid = fa
                 insertData[columName] = payload[columName]
             }
         }
-        
-        if(!relations || relations == undefined){
+
+        if (!relations || relations == undefined) {
             data = await insertOne(table, insertData)
         }
         else {
@@ -93,7 +93,7 @@ const getHelper = async (payload, table, req) => {
         for (let key in columns) {
             let columName = columns[key].Field
             let changeName = false;
-            if(columName == 'password') select[columName] = false
+            if (columName == 'password') select[columName] = false
             if (payload[columName]) {
                 where[columName] = {
                     contains: payload[columName]
@@ -105,7 +105,7 @@ const getHelper = async (payload, table, req) => {
                     let checkIdType = await prisma.$queryRawUnsafe(`SHOW COLUMNS FROM ${changeName} WHERE Field = 'id'`)
                     checkIdType = checkIdType[0].Type
                     console.log(checkIdType)
-                    if(checkIdType == 'int'){
+                    if (checkIdType == 'int') {
                         where[columName] = parseInt(payload[columName])
                     }
                     else {
@@ -147,16 +147,17 @@ const getHelper = async (payload, table, req) => {
         if (payload.status) {
             where.status = payload.status
         }
+        if (payload.package_id_subs) {
+            where.package_id = {
+                notIn: payload.package_id_subs
+            }
+            delete req.query.package_id_subs
+        }
         if (payload.date) {
             where.created_at = {
                 lte: payload.date ? payload.date + 'T23:59:59+00:00' : undefined,
                 gte: payload.date ? payload.date + 'T00:00:00+00:00' : undefined,
             }
-        }
-        if (payload.sort) {
-            params.orderBy = [{
-                created_at: payload.sort
-            }]
         }
         where.is_deleted = false
 
@@ -164,7 +165,10 @@ const getHelper = async (payload, table, req) => {
             where,
             select,
             take,
-            skip
+            skip,
+            orderBy: {
+                created_at: payload.sort ?? "asc"
+            }
         }
 
         const data = await table.findMany(params);
@@ -182,12 +186,36 @@ const getHelper = async (payload, table, req) => {
 }
 
 const showHelper = async (payload, table) => {
+    let relations;
+    let tableName = table.name
+    let data;
+    let columns = await prisma.$queryRawUnsafe(`SHOW COLUMNS FROM ${tableName}`);
     try {
+        for (let key in columns) {
+            let columName = columns[key].Field
+            let changeName = false;
+            if (columName.includes('_id')) {
+                relations = { ...relations }
+                changeName = columName.replace('_id', 's')
+                relations[changeName] = true
+            }
+        }
+
         payload.is_deleted = false
-        let data = await findFirst(table, {
-            where: payload
-        })
-        console.log("show payload", payload)
+
+        if(relations || relations != undefined){
+            console.log(relations)
+            data = await findFirst(table, {
+                where: payload,
+                include: relations
+            })
+        }
+        else {
+            data = await findFirst(table, {
+                where: payload
+            })
+        }
+        console.log("show payload", data)
         if (!data) return response(badRequest, "failed", "data tidak ditemukan")
         return response(Ok, "success", "success", data)
     } catch (error) {
@@ -211,7 +239,7 @@ const updateHelper = async (payload, table) => {
             payload.updateData.password = newPass
         }
         payload.updateData.updated_at = await dateNow()
-        
+
         if (!cek) return response(badRequest, "failed", "data tidak ditemukan");
         let data = await updateOne(table, payload)
         return response(Ok, "success", "Update berhasil", data)
