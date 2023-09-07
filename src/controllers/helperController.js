@@ -79,7 +79,7 @@ const createHelper = async (payload, table, randomNumberId = false, useUuid = fa
     }
 }
 
-const getHelper = async (payload, table, req) => {
+const getHelper = async (payload, table, req, relations) => {
     let params = [];
     let where = {}
     let select = {}
@@ -160,7 +160,12 @@ const getHelper = async (payload, table, req) => {
             }
         }
         where.is_deleted = false
-
+        if(relations){
+            for(let [key, value] of Object.entries(relations)){
+                select[key] = value
+            }
+        }
+        console.log(select)
         params = {
             where,
             select,
@@ -185,8 +190,7 @@ const getHelper = async (payload, table, req) => {
     }
 }
 
-const showHelper = async (payload, table) => {
-    let relations;
+const showHelper = async (payload, table, relations) => {
     let tableName = table.name
     let data;
     let columns = await prisma.$queryRawUnsafe(`SHOW COLUMNS FROM ${tableName}`);
@@ -203,7 +207,7 @@ const showHelper = async (payload, table) => {
 
         payload.is_deleted = false
 
-        if(relations || relations != undefined){
+        if (relations || relations != undefined) {
             console.log(relations)
             data = await findFirst(table, {
                 where: payload,
@@ -254,7 +258,12 @@ const deleteHelper = async (id, table) => {
     let tableName = table.name
     let checkIdType = await prisma.$queryRawUnsafe(`SHOW COLUMNS FROM ${tableName} WHERE Field = 'id'`)
     if (checkIdType[0].Type == 'int') uuid = false
-
+    let check = await findFirst(table, {
+        where: {
+            id: uuid ? id : parseInt(id)
+        }
+    })
+    if (!check) return response(badRequest, "failed", "data tidak ditemukan")
     try {
         let params = {
             id: uuid ? id : parseInt(id),
