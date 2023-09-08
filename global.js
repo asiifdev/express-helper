@@ -88,10 +88,10 @@ const copyFiles = async (from, to, nameFile) => {
 }
 
 const updateHelper = async () => {
-    let from = './node_modules/@asiifdev/express-helper/src/controllers/' + from
-    let to = './src/controllers/' + to
+    let from = './node_modules/@asiifdev/express-helper/src/controllers/helperController.js'
+    let to = './src/controllers/helperController.js'
     spinners.warning("Proses update helper ", "Update Helper")
-    await fs.copy('./node_modules/@asiifdev/express-helper/src/controllers/helperController.js', './src/controllers/helperController.js')
+    await fs.copy(from, to)
     spinners.success("Proses update helper ", `Write to ${to} from ${from} Finish`);
 }
 
