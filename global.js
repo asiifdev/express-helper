@@ -87,6 +87,14 @@ const copyFiles = async (from, to, nameFile) => {
     }
 }
 
+const updateHelper = async () => {
+    let from = './node_modules/@asiifdev/express-helper/src/controllers/' + from
+    let to = './src/controllers/' + to
+    spinners.warning("Proses update helper ", "Update Helper")
+    await fs.copy('./node_modules/@asiifdev/express-helper/src/controllers/helperController.js', './src/controllers/helperController.js')
+    spinners.success("Proses update helper ", `Write to ${to} from ${from} Finish`);
+}
+
 const spinners = {
     warning: async (msg, process, stop = true) => {
         const spinner = ora(msg).start();
@@ -148,6 +156,7 @@ export {
     copyFiles,
     spinners,
     firstLower,
-    firstUpper
+    firstUpper,
+    updateHelper
 }
 

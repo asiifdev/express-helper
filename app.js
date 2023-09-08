@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import { blueConsole, copyFiles, firstLower, greenConsole, redConsole, spinners } from './global.js';
+import { blueConsole, copyFiles, firstLower, greenConsole, redConsole, spinners, updateHelper } from './global.js';
 
 const program = new Command();
 
@@ -25,6 +25,13 @@ program.command('make:controller')
     if (options.r) {
       copyFiles('templateRoute.js', `${nameFile}Route.js`, nameFile)
     }
+    console.log(str)
+  })
+
+program.command('update:helper')
+  .description('Command to update a Helper Controller Express JS')
+  .action((str, options) => {
+    updateHelper()
     console.log(str)
   })
 
