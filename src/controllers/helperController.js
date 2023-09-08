@@ -51,7 +51,16 @@ const createHelper = async (payload, table, randomNumberId = false, useUuid = fa
             if (columName.includes('_id')) {
                 relations = { ...relations }
                 changeName = columName.replace('_id', 's')
-                relations[changeName] = true
+                let checkRelations = await prisma.$queryRawUnsafe(`
+                SELECT COUNT(TABLE_NAME)
+                FROM 
+                   information_schema.TABLES 
+                WHERE 
+                   TABLE_SCHEMA LIKE '${changeName}'
+                `);
+                if (parseInt(parseInt(checkRelations[0]['COUNT(TABLE_NAME)']) > 0)) {
+                    relations[changeName] = true
+                }
             }
             if (changeName) {
                 insertData[changeName] = {
@@ -85,7 +94,7 @@ const getHelper = async (payload, table, req, relations) => {
     let select = {}
     let tableName = table.name
     let columns = await prisma.$queryRawUnsafe(`SHOW COLUMNS FROM ${tableName}`);
-    let isdeleted = await prisma.$queryRawUnsafe(`SHOW COLUMNS FROM ${tableName} LIKE 'isdeleted'`);
+    let check_is_deleted = Object.values(columns).includes("is_deleted")
     payload.page = payload.page && payload.page !== '' ? parseInt(payload.page) : 1;
     payload.per_page = payload.per_page && payload.per_page !== '' ? parseInt(payload.per_page) : 10;
     const { take, skip } = parsePaginationToQueryParams(payload)
@@ -113,7 +122,16 @@ const getHelper = async (payload, table, req, relations) => {
                         where[columName] = payload[columName]
                     }
                 }
-                select[changeName] = true
+                let checkRelations = await prisma.$queryRawUnsafe(`
+                SELECT COUNT(TABLE_NAME)
+                FROM 
+                   information_schema.TABLES 
+                WHERE 
+                   TABLE_SCHEMA LIKE '${changeName}'
+                `);
+                if (parseInt(parseInt(checkRelations[0]['COUNT(TABLE_NAME)']) > 0)) {
+                    select[changeName] = true
+                }
             }
             else {
                 select[columName] = true
@@ -160,7 +178,9 @@ const getHelper = async (payload, table, req, relations) => {
                 gte: payload.date ? payload.date + 'T00:00:00+00:00' : undefined,
             }
         }
-        if (isdeleted) where.is_deleted = false
+
+        where.is_deleted = false
+        if (!check_is_deleted || check_is_deleted == 'false') delete where.is_deleted
 
         if (relations) {
             for (let [key, value] of Object.entries(relations)) {
@@ -196,7 +216,7 @@ const showHelper = async (payload, table, relations) => {
     let tableName = table.name
     let data;
     let columns = await prisma.$queryRawUnsafe(`SHOW COLUMNS FROM ${tableName}`);
-    let isdeleted = await prisma.$queryRawUnsafe(`SHOW COLUMNS FROM ${tableName} LIKE 'isdeleted'`);
+    let check_is_deleted = Object.values(columns).includes("is_deleted")
     try {
         for (let key in columns) {
             let columName = columns[key].Field
@@ -204,11 +224,21 @@ const showHelper = async (payload, table, relations) => {
             if (columName.includes('_id')) {
                 relations = { ...relations }
                 changeName = columName.replace('_id', 's')
-                relations[changeName] = true
+                let checkRelations = await prisma.$queryRawUnsafe(`
+                SELECT COUNT(TABLE_NAME)
+                FROM 
+                   information_schema.TABLES 
+                WHERE 
+                   TABLE_SCHEMA LIKE '${changeName}'
+                `);
+                if (parseInt(parseInt(checkRelations[0]['COUNT(TABLE_NAME)']) > 0)) {
+                    relations[changeName] = true
+                }
             }
         }
 
-        if (isdeleted) payload.is_deleted = false
+        payload.is_deleted = false
+        if (!check_is_deleted || check_is_deleted == false) delete payload.is_deleted
 
         if (relations || relations != undefined) {
             console.log(relations)
@@ -236,8 +266,11 @@ const updateHelper = async (payload, table) => {
         let where = {
             id: payload.id,
         }
-        let isdeleted = await prisma.$queryRawUnsafe(`SHOW COLUMNS FROM ${table.name} LIKE 'isdeleted'`);
-        if (isdeleted) where.isdeleted = false
+        let tableName = table.name
+        let columns = await prisma.$queryRawUnsafe(`SHOW COLUMNS FROM ${tableName}`);
+        let check_is_deleted = Object.values(columns).includes("is_deleted")
+        where.isdeleted = false
+        if (!check_is_deleted || check_is_deleted == false) delete where.isdeleted
 
         let cek = await findFirst(table, {
             where: where
@@ -263,7 +296,8 @@ const deleteHelper = async (id, table) => {
     let uuid = true
     let tableName = table.name
     let checkIdType = await prisma.$queryRawUnsafe(`SHOW COLUMNS FROM ${tableName} WHERE Field = 'id'`)
-    let isdeleted = await prisma.$queryRawUnsafe(`SHOW COLUMNS FROM ${tableName} LIKE 'isdeleted'`);
+    let columns = await prisma.$queryRawUnsafe(`SHOW COLUMNS FROM ${tableName}`);
+    let check_is_deleted = Object.values(columns).includes("is_deleted")
     if (checkIdType[0].Type == 'int') uuid = false
     let check = await findFirst(table, {
         where: {
@@ -273,7 +307,7 @@ const deleteHelper = async (id, table) => {
     if (!check) return response(badRequest, "failed", "data tidak ditemukan")
     try {
         let data;
-        if (isdeleted) {
+        if (check_is_deleted || check_is_deleted != 'false') {
             let params = {
                 id: uuid ? id : parseInt(id),
                 updateData: {
